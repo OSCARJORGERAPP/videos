@@ -5,8 +5,6 @@ variables:
 
 ci:
   script:
-    # Instala solo las dependencias necesarias para los tests unitarios (~150MB vs ~1GB full)
-    # Next.js, AWS SDK y MongoDB no se necesitan — los tests son funciones puras
     - npm install --no-save
         jest ts-jest jest-environment-node @types/jest
         typescript ts-node
