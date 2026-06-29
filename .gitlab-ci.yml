@@ -1,17 +1,5 @@
 image: node:20-alpine
 
-stages:
-  - install
-  - lint
-  - test
-  - build
-
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - node_modules/
-    - .next/cache/
-
 variables:
   JWT_SECRET: "ci-test-secret-minimum-32-characters-ok"
   MONGODB_URI: "mongodb://localhost:27017"
@@ -21,37 +9,19 @@ variables:
   RUSTFS_SECRET_KEY: "rustfsadmin"
   RUSTFS_BUCKET: "videos"
   NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
 
-install:
-  stage: install
-  script:
-    - npm ci
-  artifacts:
-    paths:
-      - node_modules/
-    expire_in: 1 hour
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
 
-lint:
-  stage: lint
+ci:
   script:
+    - npm ci --prefer-offline
     - npm run lint
-  needs: [install]
-
-test:
-  stage: test
-  script:
     - npm test
-  needs: [install]
-
-build:
-  stage: build
-  script:
     - npm run build
-  needs: [install]
-  artifacts:
-    paths:
-      - .next/
-    expire_in: 1 day
   only:
     - main
-    - master
+    - merge_requests
