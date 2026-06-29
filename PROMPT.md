@@ -26,7 +26,7 @@ contenido entre usuarios, con metadatos ricos y un reproductor integrado.
 ## 3. Stack tecnológico
 | Capa | Tecnología | Motivo |
 |---|---|---|
-| Frontend | Next.js 15 (App Router) | SSR + RSC + API Routes en un solo proyecto |
+| Frontend | Next.js 16 (App Router) | SSR + RSC + API Routes en un solo proyecto |
 | Estilos | Tailwind CSS v4 | Utilidades atómicas, diseño rápido y consistente |
 | Backend | Next.js API Routes | Evita un servidor adicional; mismo despliegue |
 | Auth | JWT (jsonwebtoken) + bcryptjs | Estándar sin sesiones server-side |
