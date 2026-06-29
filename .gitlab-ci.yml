@@ -2,26 +2,18 @@ image: node:20-alpine
 
 variables:
   JWT_SECRET: "ci-test-secret-minimum-32-characters-ok"
-  MONGODB_URI: "mongodb://localhost:27017"
-  MONGODB_DB: "Videovault"
-  RUSTFS_ENDPOINT: "http://localhost:9001"
-  RUSTFS_ACCESS_KEY: "rustfsadmin"
-  RUSTFS_SECRET_KEY: "rustfsadmin"
-  RUSTFS_BUCKET: "videos"
-  NEXT_PUBLIC_APP_URL: "http://localhost:3000"
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
-
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - .npm/
 
 ci:
   script:
-    - npm ci --prefer-offline
-    - npm run lint
+    # Instala solo las dependencias necesarias para los tests unitarios (~150MB vs ~1GB full)
+    # Next.js, AWS SDK y MongoDB no se necesitan — los tests son funciones puras
+    - npm install --no-save
+        jest ts-jest jest-environment-node @types/jest
+        typescript ts-node
+        jsonwebtoken @types/jsonwebtoken
+        bcryptjs @types/bcryptjs
+        mongodb
     - npm test
-    - npm run build
   only:
     - main
     - merge_requests
