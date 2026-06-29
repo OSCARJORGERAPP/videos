@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'ci-test-secret-minimum-32-characters' }}
+
+      - name: Build
+        run: npm run build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI || 'mongodb://localhost:27017' }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB || 'Videovault' }}
+          RUSTFS_ENDPOINT: ${{ secrets.RUSTFS_ENDPOINT || 'http://localhost:9001' }}
+          RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY || 'rustfsadmin' }}
+          RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY || 'rustfsadmin' }}
+          RUSTFS_BUCKET: ${{ secrets.RUSTFS_BUCKET || 'videos' }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'ci-test-secret-minimum-32-characters' }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
